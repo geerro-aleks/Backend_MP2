@@ -1,0 +1,17 @@
+Servlets\CreatePostServlet.class
+Servlets\DBHelper.class
+Servlets\AdminServlet.class
+com\mycompany\webapplicationdb\resources\JavaEE8Resource.class
+Servlets\ProfileServlet.class
+Servlets\UsersServlet.class
+Servlets\FollowUserServlet.class
+Servlets\DeleteUserServlet.class
+Servlets\LandingServlet.class
+Servlets\DeletePostServlet.class
+Servlets\UpdateUserServlet.class
+com\mycompany\webapplicationdb\JAXRSConfiguration.class
+Servlets\CreateUserServlet.class
+Servlets\LoginServlet.class
+Servlets\UnfollowUserServlet.class
+Servlets\HelpServlet.class
+Servlets\SignupServlet.class
