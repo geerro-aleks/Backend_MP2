@@ -67,6 +67,23 @@ public class AdminServlet extends HttpServlet {
         request.setAttribute("users", users);
         request.setAttribute("messages", messages);
         request.setAttribute("userRole", userRole);
-        request.getRequestDispatcher("admin.jsp").forward(request, response);
+
+        String redirectPage = request.getParameter("redirectPage");
+        if (redirectPage != null) {
+            switch (redirectPage) {
+                case "update.jsp":
+                    request.getRequestDispatcher("update.jsp").forward(request, response);
+                    break;
+                case "delete.jsp":
+                    request.getRequestDispatcher("delete.jsp").forward(request, response);
+                    break;
+                default:
+                    request.getRequestDispatcher("admin.jsp").forward(request, response);
+                    break;
+            }
+        } else {
+            // Default to admin.jsp
+            request.getRequestDispatcher("admin.jsp").forward(request, response);
+        }
     }
 }

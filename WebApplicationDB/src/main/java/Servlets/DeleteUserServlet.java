@@ -39,6 +39,6 @@ public class DeleteUserServlet extends HttpServlet {
         }
 
         // Forward back to the admin page
-        request.getRequestDispatcher("admin.jsp").forward(request, response);
+        request.getRequestDispatcher("delete.jsp").forward(request, response);
     }
 }
