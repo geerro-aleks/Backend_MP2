@@ -16,7 +16,7 @@ public class UsersServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("username") == null) {
             response.sendRedirect("login.jsp?error=Please login first.");
@@ -27,8 +27,8 @@ public class UsersServlet extends HttpServlet {
         List<String> followedUsers = new ArrayList<>();
 
         try (Connection conn = DBHelper.getConnection()) {
-            String query = "SELECT follow1, follow2, follow3 FROM follows WHERE user_name = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            String selectQuery = "SELECT follow1, follow2, follow3 FROM follows WHERE user_name = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(selectQuery)) {
                 stmt.setString(1, currentUser);
                 ResultSet rs = stmt.executeQuery();
 
@@ -43,10 +43,11 @@ public class UsersServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            request.setAttribute("error", "Database error: " + e.getMessage());
+            response.sendRedirect("users.jsp?error=Database error: " + e.getMessage());
+            return;
         }
 
-        request.setAttribute("followedUsers", followedUsers);
+        session.setAttribute("followedUsers", followedUsers);
         request.getRequestDispatcher("users.jsp").forward(request, response);
     }
 }

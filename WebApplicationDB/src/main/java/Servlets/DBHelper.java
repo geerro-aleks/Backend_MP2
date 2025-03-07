@@ -56,19 +56,18 @@ public class DBHelper {
     
     public Boolean deleteUser(String username) throws SQLException {
         if (username == null || username.trim().isEmpty()) {
-            return false; // Invalid username
+            return false;
         }
         try (Connection conn = DBHelper.getConnection()) {
-            // SQL query to delete the user
             String sql = "DELETE FROM account WHERE user_name = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, username); // Set the username parameter
-                int rowsDeleted = stmt.executeUpdate(); // Execute the DELETE query
-                return rowsDeleted > 0; // Return true if at least one row was deleted
+                stmt.setString(1, username); 
+                int rowsDeleted = stmt.executeUpdate(); 
+                return rowsDeleted > 0; 
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw e; // Re-throw the exception for handling in the calling method
+            throw e;
         }
     }
 }

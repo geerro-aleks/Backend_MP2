@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 
 @WebServlet("/ProfileServlet")
 public class ProfileServlet extends HttpServlet {
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -38,21 +37,20 @@ public class ProfileServlet extends HttpServlet {
                 ResultSet rs = stmt.executeQuery();
 
                 if (rs.next()) {
-                    for (int i = 1; i <= 5; i++) { // Retrieve posts in ascending order
+                    for (int i = 1; i <= 5; i++) {
                         String post = rs.getString("post" + i);
                         if (post != null && !post.trim().isEmpty()) {
                             userPosts.add(post);
-                            System.out.println("Post " + i + ": " + post);
                         }
                     }
-                } else {
-                    System.out.println("You have no posts yet.");
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
             request.setAttribute("error", "Database error: " + e.getMessage());
         }
+
+        System.out.println("Loaded posts: " + userPosts); // Debugging
 
         request.setAttribute("posts", userPosts);
         request.getRequestDispatcher("profile.jsp").forward(request, response);

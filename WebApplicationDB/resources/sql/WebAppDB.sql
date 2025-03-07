@@ -34,6 +34,12 @@ CREATE TABLE follows (
     FOREIGN KEY (follow3) REFERENCES account(user_name)
 );
 
+CREATE TABLE messages(
+	user_name VARCHAR(30),
+    subject TEXT,
+    message TEXT
+);
+
 INSERT INTO account (user_name, password, user_role) VALUES 
 ("johanna", "123", "user"),
 ("julia", "999", "user"),

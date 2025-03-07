@@ -1,10 +1,7 @@
 package Servlets;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -28,25 +25,24 @@ public class CreatePostServlet extends HttpServlet {
         String content = request.getParameter("content");
 
         if (content == null || content.trim().isEmpty()) {
-            response.sendRedirect("profile.jsp?error=Post content cannot be empty.");
+            response.sendRedirect("ProfileServlet?error=Post content cannot be empty.");
             return;
         }
 
         try (Connection conn = DBHelper.getConnection()) {
-            // Check if the user already has posts
             String checkQuery = "SELECT user_name FROM posts WHERE user_name = ?";
             try (PreparedStatement checkStmt = conn.prepareStatement(checkQuery)) {
                 checkStmt.setString(1, currentUser);
                 ResultSet rs = checkStmt.executeQuery();
 
-                if (rs.next()) { // User exists, shift posts
+                if (rs.next()) { 
                     String updateQuery = "UPDATE posts SET post5 = post4, post4 = post3, post3 = post2, post2 = post1, post1 = ? WHERE user_name = ?";
                     try (PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
                         stmt.setString(1, content);
                         stmt.setString(2, currentUser);
                         stmt.executeUpdate();
                     }
-                } else { // User does not exist, insert new row
+                } else { 
                     String insertQuery = "INSERT INTO posts (user_name, post1) VALUES (?, ?)";
                     try (PreparedStatement insertStmt = conn.prepareStatement(insertQuery)) {
                         insertStmt.setString(1, currentUser);
@@ -57,10 +53,10 @@ public class CreatePostServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            response.sendRedirect("profile.jsp?error=Database error: " + e.getMessage());
+            response.sendRedirect("ProfileServlet?error=Database error: " + e.getMessage());
             return;
         }
 
-        response.sendRedirect("ProfileServlet");
+        response.sendRedirect("ProfileServlet"); 
     }
 }

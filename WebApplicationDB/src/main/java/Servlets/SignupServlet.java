@@ -42,7 +42,6 @@ public class SignupServlet extends HttpServlet {
                 }
             }
 
-            // Insert new user
             String insertQuery = "INSERT INTO account (user_name, password, user_role) VALUES (?, ?, ?)";
             try (PreparedStatement insertStmt = conn.prepareStatement(insertQuery)) {
                 insertStmt.setString(1, username);

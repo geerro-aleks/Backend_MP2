@@ -27,17 +27,24 @@ public class LandingServlet extends HttpServlet {
         List<String> followedPosts = new ArrayList<>();
 
         try (Connection conn = DBHelper.getConnection()) {
-            String postQuery = "SELECT p.user_name, p.post5 FROM posts p " +
-                               "JOIN follows f ON p.user_name = f.follow1 OR p.user_name = f.follow2 OR p.user_name = f.follow3 " +
-                               "WHERE f.user_name = ? AND p.post5 IS NOT NULL";
+            String postQuery = "SELECT p.user_name, p.post1, p.post2, p.post3, p.post4, p.post5 " +
+                               "FROM posts p " +
+                               "JOIN follows f " +
+                               "ON p.user_name IN (f.follow1, f.follow2, f.follow3) " +
+                               "WHERE f.user_name = ?";
 
             try (PreparedStatement stmt = conn.prepareStatement(postQuery)) {
                 stmt.setString(1, currentUser);
                 ResultSet rs = stmt.executeQuery();
 
                 while (rs.next()) {
-                    String post = "<strong>" + rs.getString("user_name") + ":</strong> " + rs.getString("post5");
-                    followedPosts.add(post);
+                    String user = rs.getString("user_name");
+                    for (int i = 5; i >= 1; i--) {  // Ensuring latest posts appear first
+                        String post = rs.getString("post" + i);
+                        if (post != null && !post.trim().isEmpty()) {
+                            followedPosts.add("<strong>" + user + ":</strong> " + post);
+                        }
+                    }
                 }
             }
         } catch (SQLException e) {

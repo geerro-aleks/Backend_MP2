@@ -7,11 +7,13 @@ Servlets\UsersServlet.class
 Servlets\FollowUserServlet.class
 Servlets\DeleteUserServlet.class
 Servlets\LandingServlet.class
+Servlets\LogoutServlet.class
 Servlets\DeletePostServlet.class
 Servlets\UpdateUserServlet.class
 com\mycompany\webapplicationdb\JAXRSConfiguration.class
 Servlets\CreateUserServlet.class
 Servlets\LoginServlet.class
+Servlets\ResultServlet.class
 Servlets\UnfollowUserServlet.class
 Servlets\HelpServlet.class
 Servlets\SignupServlet.class

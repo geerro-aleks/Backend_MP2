@@ -1,19 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package Servlets;
 
 import java.io.*;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.*;
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
-/**
- *
- * @author DELL
- */
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
@@ -30,7 +24,7 @@ public class LoginServlet extends HttpServlet {
         }
 
         try (Connection conn = DBHelper.getConnection()) {
-            // First, check if the username exists
+            // Checks if the username exists
             String checkUserQuery = "SELECT password, user_role FROM account WHERE user_name = ?";
             try (PreparedStatement stmt = conn.prepareStatement(checkUserQuery)) {
                 stmt.setString(1, username);
@@ -40,25 +34,36 @@ public class LoginServlet extends HttpServlet {
                     String storedPassword = rs.getString("password");
                     String userRole = rs.getString("user_role");
 
-                    // Compare passwords
                     if (storedPassword.equals(password)) {
-                        // Valid login, create session
                         HttpSession session = request.getSession();
                         session.setAttribute("username", username);
                         session.setAttribute("userRole", userRole);
 
-                        // Redirect based on role
+                        List<String> followedUsers = new ArrayList<>();
+                        String selectFollowsQuery = "SELECT follow1, follow2, follow3 FROM follows WHERE user_name = ?";
+                        try (PreparedStatement followsStmt = conn.prepareStatement(selectFollowsQuery)) {
+                            followsStmt.setString(1, username);
+                            ResultSet followsRs = followsStmt.executeQuery();
+                            if (followsRs.next()) {
+                                for (int i = 1; i <= 3; i++) {
+                                    String followedUser = followsRs.getString("follow" + i);
+                                    if (followedUser != null) {
+                                        followedUsers.add(followedUser);
+                                    }
+                                }
+                            }
+                        }
+                        session.setAttribute("followedUsers", followedUsers);
+
                         if ("admin".equals(userRole) || "super_admin".equals(userRole)) {
-                            response.sendRedirect("admin.jsp");
+                            response.sendRedirect("AdminServlet");
                         } else {
-                            response.sendRedirect("landing.jsp");
+                            response.sendRedirect("LandingServlet"); // Now loads posts too!
                         }
                     } else {
-                        // Password is incorrect
                         response.sendRedirect("login.jsp?error=Incorrect password.");
                     }
                 } else {
-                    // Username does not exist
                     response.sendRedirect("login.jsp?error=Username does not exist.");
                 }
             }
