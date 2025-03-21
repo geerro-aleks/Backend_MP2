@@ -116,31 +116,37 @@
             <% } %>
 
             <h2>List of Users</h2>
-            <table>
-                <tr>
-                    <th>Username</th>
-                    <th>Password</th>
-                    <th>Role</th>
-                    <th>Actions</th>
-                </tr>
-                <% if (users != null && !users.isEmpty()) {
-                        for (String[] user : users) {%>
-                <tr>
-                    <td><%= user[0]%></td>
-                    <td><%= user[1]%></td>
-                    <td><%= user[2]%></td>
-                    <td>
-                        <form action="DeleteUserServlet" method="post" style="display:inline;">
-                            <input type="hidden" name="username" value="<%= user[0]%>">
-                            <button type="submit" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-                <%  }
-                } else { %>
-                <tr><td colspan="4">No users found.</td></tr>
-                <% }%>
-            </table>
+            <form action="DeleteUserServlet" method="post">
+                <table>
+                    <tr>
+                        <th>Select</th>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Role</th>
+                    </tr>
+                    <% if (users != null && !users.isEmpty()) {
+                            for (String[] user : users) {
+                                boolean isAdmin = "admin".equals(user[2]);
+                                boolean isSuperAdmin = "super_admin".equals(userRole);
+                                boolean canDelete = !isAdmin || isSuperAdmin;
+                    %>
+                    <tr>
+                        <td>
+                            <% if (canDelete) { %>
+                                <input type="checkbox" name="usernames" value="<%= user[0]%>">
+                            <% } %>
+                        </td>
+                        <td><%= user[0]%></td>
+                        <td><%= user[1]%></td>
+                        <td><%= user[2]%></td>
+                    </tr>
+                    <%  }
+                    } else { %>
+                    <tr><td colspan="4">No users found.</td></tr>
+                    <% }%>
+                </table>
+                <button type="submit" onclick="return confirm('Are you sure you want to delete the selected users?')">Delete Selected Users</button>
+            </form>
         </div>
     </body>
 </html>

@@ -69,5 +69,5 @@ public class DBHelper {
             e.printStackTrace();
             throw e;
         }
-    }
+}
 }
