@@ -93,6 +93,12 @@
             button:hover {
                 background-color: #BDC4A7;
             }
+            input[type="text"], input[type="password"], select {
+                padding: 8px;
+                border: 1px solid #BDC4A7;
+                border-radius: 5px;
+                margin-right: 10px;
+            }
         </style>
     </head>
     <body>
@@ -116,41 +122,48 @@
             <% } %>
 
             <h2 id="updateUser">List of Users</h2>
-            <table>
-                <tr>
-                    <th>Username</th>
-                    <th>Password</th>
-                    <th>Role</th>
-                    <th>Actions</th>
-                </tr>
-                <% if (users != null && !users.isEmpty()) {
-                    for (String[] user : users) {%>
-                <tr>
-                    <td><%= user[0]%></td>
-                    <td><%= user[1]%></td>
-                    <td><%= user[2]%></td>
-                    <td>
-                        <form action="UpdateUserServlet" method="post" style="display:inline;">
-                            <input type="hidden" name="username" value="<%= user[0]%>">
-                            <input type="text" name="newUsername" placeholder="New Username">
-                            <input type="password" name="newPassword" placeholder="New Password">
-                            <select name="newRole">
-                                <option value="">Change Role</option>
+            <form action="UpdateUserServlet" method="post">
+                <table>
+                    <tr>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Role</th>
+                        <th>New Username</th>
+                        <th>New Password</th>
+                        <th>New Role</th>
+                    </tr>
+                    <% if (users != null && !users.isEmpty()) {
+                        for (String[] user : users) {
+                            String oldUsername = user[0];
+                    %>
+                    <tr>
+                        <td><%= oldUsername%></td>
+                        <td><%= user[1]%></td>
+                        <td><%= user[2]%></td>
+                        <td>
+                            <input type="text" name="newUsername_<%= oldUsername%>" placeholder="New Username">
+                        </td>
+                        <td>
+                            <input type="password" name="newPassword_<%= oldUsername%>" placeholder="New Password">
+                        </td>
+                        <td>
+                            <select name="newRole_<%= oldUsername%>">
+                                <option value="">No Change</option>
                                 <option value="user">User</option>
                                 <option value="admin">Admin</option>
                                 <% if ("super_admin".equals(userRole)) { %>
                                 <option value="super_admin">Super Admin</option>
                                 <% } %>
                             </select>
-                            <button type="submit" onclick="return confirm('Are you sure you want to update this user?')">Update</button>
-                        </form>
-                    </td>
-                </tr>
-                <%  }
-                } else { %>
-                <tr><td colspan="4">No users found.</td></tr>
-                <% }%>
-            </table>
+                        </td>
+                    </tr>
+                    <%  }
+                    } else { %>
+                    <tr><td colspan="6">No users found.</td></tr>
+                    <% }%>
+                </table>
+                <button type="submit" onclick="return confirm('Are you sure you want to update the selected users?')">Update Users</button>
+            </form>
         </div>
     </body>
 </html>
